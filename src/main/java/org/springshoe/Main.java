@@ -4,9 +4,11 @@ import org.springshoe.services.ServiceA;
 import org.springshoe.services.ServiceB;
 import org.springshoe.services.ServiceC;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 /*
-*  plan is make an instance of a class A,B and C
-* and inject them in order of
+* this time i will use java reflection to do the same
 *
 *       A
 *      / \
@@ -14,11 +16,17 @@ import org.springshoe.services.ServiceC;
 *
 *
 **/
+@SuppressWarnings({ "rawtypes"})
 public class Main {
-    static void main() {
-        ServiceB serviceB = new ServiceB();
-        ServiceC serviceC = new ServiceC();
-
-        ServiceA serviceA = new ServiceA(serviceB, serviceC);
+    static void main() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Class serviceBClass = Class.forName("org.springshoe.services.ServiceB");
+        Class serviceCClass = Class.forName("org.springshoe.services.ServiceC");
+        Class serviceAClass = Class.forName("org.springshoe.services.ServiceA");
+        Constructor serviceBConstructor = serviceBClass.getDeclaredConstructor();
+        Constructor serviceCConstructor = serviceCClass.getDeclaredConstructor();
+        Constructor serviceAConstructor = serviceAClass.getConstructor(serviceBClass, serviceCClass);
+        Object serviceB = serviceBConstructor.newInstance();
+        Object serviceC = serviceCConstructor.newInstance();
+        Object serviceA = serviceAConstructor.newInstance(serviceB, serviceC);
     }
 }
