@@ -1,7 +1,7 @@
 package org.springshoe.core;
 
 import org.reflections.Reflections;
-import org.springshoe.Constaints;
+import org.springshoe.utils.Constaints;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
