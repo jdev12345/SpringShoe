@@ -3,19 +3,24 @@ package org.springshoe;
 import org.reflections.Reflections;
 import org.springshoe.annotation.Service;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
+import java.util.*;
 
 /*
 *
-* GET all classes with annotation service
+* Create a Map with every class with its dependency
 *
 **/
 @SuppressWarnings({ "rawtypes"})
 public class Main {
-    static void main() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    static void main(){
         Reflections reflections = new Reflections("org.springshoe");
         Set<Class<?>> classesWithAnnotation = reflections.getTypesAnnotatedWith(Service.class);
-        System.out.println(classesWithAnnotation);
+        Map<Class<?>, List<Field>>  dependenciesMap = new HashMap<>();
+        for(Class<?> cls: classesWithAnnotation){
+            List<Field> dependencies = List.of(cls.getDeclaredFields());
+            dependenciesMap.put(cls, dependencies);
+        }
     }
 }
