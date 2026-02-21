@@ -1,5 +1,8 @@
 package org.springshoe.services;
 
+import org.springshoe.annotation.Service;
+
+@Service
 public class ServiceA {
     private final ServiceB serviceB;
     private final ServiceC serviceC;
