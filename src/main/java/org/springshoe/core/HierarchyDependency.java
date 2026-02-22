@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HierarchyDependency<T extends Annotation> {
-    private static final Reflections reflections = new Reflections(Constaints.root);
+    private static final Reflections reflections = new Reflections(Constaints.ROOT_PACKAGE);
     private final Class<T> annotationClass;
 
     public HierarchyDependency(@Nonnull Class<T> annotationClass){

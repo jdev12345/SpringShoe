@@ -59,6 +59,7 @@ public class DependencyGraphValidator {
         if (processed != indegree.size()) {
             throw new CircularDependencyException();
         }
+        topoSortArray = topoSortArray.reversed();
         return topoSortArray;
     }
 }
