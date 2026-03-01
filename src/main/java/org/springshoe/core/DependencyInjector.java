@@ -1,7 +1,6 @@
 package org.springshoe.core;
 
 import org.springshoe.exception.BeanCreationException;
-import org.springshoe.pojo.TypeSafeMap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

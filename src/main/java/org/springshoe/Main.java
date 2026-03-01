@@ -1,6 +1,6 @@
 package org.springshoe;
 
-import org.springshoe.core.Init;
+import org.springshoe.core.SpringShoe;
 
 /*
 *
@@ -9,6 +9,8 @@ import org.springshoe.core.Init;
 **/
 public class Main {
 
-    static void main(){
-        Init.init();    }
+    void main() throws Exception {
+        SpringShoe springShoe = new SpringShoe();
+        springShoe.init();
+    }
 }

@@ -1,6 +1,6 @@
 package org.springshoe.services;
 
-import org.springshoe.annotation.Service;
+import org.springshoe.annotation.bean.Service;
 
 @Service
 public class ServiceA {
@@ -11,5 +11,9 @@ public class ServiceA {
         this.serviceB = serviceB;
         this.serviceC = serviceC;
         System.out.println("ServiceA was invoked");
+    }
+
+    public String test() {
+        return serviceB.test() + " " + serviceC.test() + "!!";
     }
 }
