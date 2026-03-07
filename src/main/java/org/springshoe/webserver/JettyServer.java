@@ -9,24 +9,27 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springshoe.annotation.Path;
+import org.springshoe.annotation.RouteInvoker;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.invoke.*;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JettyServer {
-    private static Class<? extends Annotation> PATH_ANNOTATION = Path.class;
+    private static final Class<? extends Annotation> PATH_ANNOTATION = Path.class;
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static Map<String, RouteInfo> routeRegistry = new HashMap<>();
+    private static final Map<String, RouteInfo> routeRegistry = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
 
-    record RouteInfo(Object controllerInstance, Method method) {}
+    record RouteInfo(Object controllerInstance, RouteInvoker invoker) {}
 
-    public void start(List<Object> controllers) throws Exception {
+    public void start(List<Object> controllers) throws Throwable {
         Server server = new Server(8080);
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
 
         for(Object controller : controllers){
             Class<?> clazz = controller.getClass();
@@ -34,7 +37,21 @@ public class JettyServer {
             for(Method method : clazz.getDeclaredMethods()){
                 if(method.isAnnotationPresent(PATH_ANNOTATION)){
                     Path annotation = (Path) method.getAnnotation(PATH_ANNOTATION);
-                    routeRegistry.put(annotation.method() + ":" + annotation.route(),new RouteInfo(controller, method));
+
+                    MethodHandle handle = lookup
+                            .unreflect(method);
+
+                    CallSite callSite = LambdaMetafactory.metafactory(
+                            lookup,
+                            "invoke",
+                            MethodType.methodType(RouteInvoker.class),
+                            MethodType.methodType(Object.class, Object.class),
+                            handle,
+                            handle.type()
+                    );
+                    RouteInvoker invoker =
+                            (RouteInvoker) callSite.getTarget().invokeExact();
+                    routeRegistry.put(annotation.method() + ":" + annotation.route(),new RouteInfo(controller, invoker));
                 }
             }
         }
@@ -46,25 +63,23 @@ public class JettyServer {
                     throws IOException {
 
                 String httpMethod = request.getMethod();
-                String path = target;
-                String lookupKey = httpMethod + ":" + path;
+                String lookupKey = httpMethod + ":" + target;
 
                 RouteInfo targetInfo = routeRegistry.get(lookupKey);
 
                 if (targetInfo != null) {
                     try {
-                        Object data = targetInfo.method().invoke(targetInfo.controllerInstance());
+                        Object result = targetInfo.invoker().invoke(targetInfo.controllerInstance());
 
-                        if (data != null) {
-                            writeResponse(response, data);
+                        if (result != null) {
+                            writeResponse(response, result);
                         } else {
                             response.setStatus(204);
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        response.sendError(500, "Internal Server Error");
-                    }
+                    } catch (Throwable e) {
+                        logger.error("Unexpected Error occurred",e);
+                        response.sendError(500, "Internal Server Error");                    }
                 } else {
                     response.setStatus(404);
                     response.getWriter().println("Not Found");

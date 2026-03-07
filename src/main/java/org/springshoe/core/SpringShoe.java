@@ -20,13 +20,13 @@ public class SpringShoe {
         beanAnnotations.add(Service.class);
     }
 
-    public void run() throws Exception {
+    public void run() throws Throwable {
         Map<Class<?>, Object> beanMap = manageDependencyInjection();
         createWebServer(beanMap);
 
     }
 
-    private void createWebServer(Map<Class<?>, Object> beanMap) throws Exception {
+    private void createWebServer(Map<Class<?>, Object> beanMap) throws Throwable {
         JettyServer server = new JettyServer();
         List<Object> beans = BeanSeparator.getBeansWithAnnotation(beanMap, Controller.class);
         server.start(beans);

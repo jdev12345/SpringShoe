@@ -9,7 +9,7 @@ import org.springshoe.core.SpringShoe;
 **/
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Throwable {
         SpringShoe springShoe = new SpringShoe();
         springShoe.run();
     }
