@@ -1,7 +1,7 @@
 package org.springshoe.core;
 
 import org.reflections.Reflections;
-import org.springshoe.utils.Constaints;
+import org.springshoe.utils.Constants;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HierarchyDependency<T extends Annotation> {
-    private static final Reflections reflections = new Reflections(Constaints.ROOT_PACKAGE);
+    private static final Reflections reflections = new Reflections(Constants.ROOT_PACKAGE);
     private final Class<T> annotationClass;
 
     public HierarchyDependency(@Nonnull Class<T> annotationClass){

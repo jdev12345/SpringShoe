@@ -1,6 +1,6 @@
 package org.springshoe.utils;
 
-public class Constaints {
+public class Constants {
 
     public static final String ROOT_PACKAGE = getRootPackage();
 

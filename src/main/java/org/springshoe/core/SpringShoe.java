@@ -20,7 +20,7 @@ public class SpringShoe {
         beanAnnotations.add(Service.class);
     }
 
-    public void init() throws Exception {
+    public void run() throws Exception {
         Map<Class<?>, Object> beanMap = manageDependencyInjection();
         createWebServer(beanMap);
 
