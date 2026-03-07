@@ -52,8 +52,6 @@ public class DependencyInjector {
             if(beanMap.containsKey(clazz)){
                 field.setAccessible(true);
                 field.set(bean, beanMap.get(field.getClass()));
-            }else{
-                throw new BeanCreationException("Unexpected Error Occurred");
             }
         }
         return bean;

@@ -29,7 +29,7 @@ public class HierarchyDependency<T extends Annotation> {
         List<Field> dependencies = List.of(cls.getDeclaredFields());
         List<Field> annotatedDependencies = new ArrayList<>();
         for(Field field : dependencies){
-            if(DependencyUtil.isAnnotatedWith(field.getClass(), BaseBeanClass.class)){
+            if(DependencyUtil.isAnnotatedWith(field.getType(), BaseBeanClass.class)){
                 annotatedDependencies.add(field);
             }
         }
