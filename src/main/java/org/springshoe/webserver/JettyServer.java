@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springshoe.annotation.Path;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ public class JettyServer {
     private static Class<? extends Annotation> PATH_ANNOTATION = Path.class;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static Map<String, RouteInfo> routeRegistry = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
 
     record RouteInfo(Object controllerInstance, Method method) {}
 
@@ -70,8 +73,8 @@ public class JettyServer {
                 baseRequest.setHandled(true);
             }
         });
-
         server.start();
+        logger.info("Server started on port : 8080");
         server.join();
     }
 
