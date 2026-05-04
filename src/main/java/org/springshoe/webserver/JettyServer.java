@@ -27,7 +27,7 @@ public class JettyServer {
 
     record RouteInfo(Object controllerInstance, RouteInvoker invoker) {}
 
-    public void start(List<Object> controllers) throws Throwable {
+    public void start(List<Object> controllers, long startTime) throws Throwable {
         Server server = new Server(8080);
         MethodHandles.Lookup lookup = MethodHandles.lookup();
 
@@ -89,7 +89,8 @@ public class JettyServer {
             }
         });
         server.start();
-        logger.info("Server started on port : 8080");
+        long endTime = System.currentTimeMillis();
+        logger.info("Server started on port : 8080 in {} ms", (endTime - startTime));
         server.join();
     }
 

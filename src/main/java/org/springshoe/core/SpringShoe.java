@@ -21,15 +21,16 @@ public class SpringShoe {
     }
 
     public void run() throws Throwable {
+        long startTime = System.currentTimeMillis();
         Map<Class<?>, Object> beanMap = manageDependencyInjection();
-        createWebServer(beanMap);
+        createWebServer(beanMap, startTime);
 
     }
 
-    private void createWebServer(Map<Class<?>, Object> beanMap) throws Throwable {
+    private void createWebServer(Map<Class<?>, Object> beanMap, long startTime) throws Throwable {
         JettyServer server = new JettyServer();
         List<Object> beans = BeanSeparator.getBeansWithAnnotation(beanMap, Controller.class);
-        server.start(beans);
+        server.start(beans, startTime);
     }
 
     private Map<Class<?>, Object> manageDependencyInjection(){
